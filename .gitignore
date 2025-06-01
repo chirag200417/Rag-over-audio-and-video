@@ -1,0 +1,7 @@
+venv/
+.env
+demo.mp4
+qdrant_storage/
+assets/
+__pycache__/
+hf_cache

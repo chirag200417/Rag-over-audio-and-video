@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  # Vector database service
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT_ALLOW_ORIGIN=*
+
+  # Main application service
+  rag-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./:/app
+      - hf_cache:/app/hf_cache
+    depends_on:
+      - qdrant
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+
+volumes:
+  qdrant_data:
+    driver: local
+  hf_cache:
+    driver: local
